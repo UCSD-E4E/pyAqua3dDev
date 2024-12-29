@@ -1,0 +1,26 @@
+[tool.poetry]
+name = "pyaqua3ddev"
+version = "0.1.0"
+description = ""
+authors = ["Christopher L. Crutchfield <ccrutchf@ucsd.edu>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+matplotlib = "^3.10.0"
+opencv-python = "^4.10.0.84"
+numpy = "^2.2.1"
+pillow = "^11.0.0"
+scikit-learn = "^1.6.0"
+scipy = "^1.14.1"
+scikit-image = "^0.25.0"
+rawpy = "^0.24.0"
+pywavelets = "^1.8.0"
+
+[tool.poetry.group.dev.dependencies]
+ipykernel = "^6.29.5"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
