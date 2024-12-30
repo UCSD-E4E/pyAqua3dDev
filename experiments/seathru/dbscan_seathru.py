@@ -34,10 +34,10 @@ def imshow(img: np.ndarray, color_channel="rgb"):
     elif color_channel == "hsv":
         img = cv2.cvtColor(img, cv2.COLOR_HSV2RGB)
 
-    plt.imshow(img)
+    #plt.imshow(img)
 
-    if len(img.shape) == 2:
-        plt.colorbar()
+    #if len(img.shape) == 2:
+    #    plt.colorbar()
 # %%
 png = uint8_2_double(cv2.imread(png_file))
 height, width, _ = png.shape
@@ -207,8 +207,10 @@ def metric(a: np.ndarray, b: np.ndarray):
     
     return np.linalg.norm(a[2] - b[2])
 # %%
+print("Coffee Time")
 dbscan = DBSCAN(eps=epsilon, min_samples=2, n_jobs=-1, metric=metric).fit(X)
 
 dbscan.labels_
 # %%
+print("No more coffee")
 np.savez_compressed("dbscan", dbscan.labels_)
