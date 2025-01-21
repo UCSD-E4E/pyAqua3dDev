@@ -25,7 +25,7 @@ class LabelStudioLaserDetector(LaserDetector):
             path_string: str = item["data"]["img"]
 
             if path_string.startswith("https://e4e-nas.ucsd.edu:6021"):
-                url = urlparse(url)
+                url = urlparse(path_string)
 
                 if Path(url.path).stem != self.__image_path.stem:
                     continue
