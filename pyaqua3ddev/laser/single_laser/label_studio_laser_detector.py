@@ -37,11 +37,11 @@ class LabelStudioLaserDetector(LaserDetector):
                     return None
 
                 result = item["annotations"][0]["result"][0]
-                original_width = result["original_width"]
-                original_height = result["original_height"]
+                original_width = float(result["original_width"])
+                original_height = float(result["original_height"])
 
-                x = result["value"]["x"] * original_width
-                y = result["value"]["y"] * original_height
+                x = result["value"]["x"] * original_width / 100.0
+                y = result["value"]["y"] * original_height / 100.0
 
                 return self._correct_laser(img, np.array([x, y]))
             else:
