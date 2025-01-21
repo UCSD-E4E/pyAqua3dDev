@@ -13,7 +13,7 @@ class LaserDetector(ABC):
     ) -> np.ndarray[np.uint8] | None:
         height, width, _ = img.shape
 
-        mask = np.zeros((height, width), dtype=np.uint8)
+        mask = np.zeros((height + 2, width + 2), dtype=np.uint8)
         cv2.floodFill(
             img,
             mask,
@@ -26,7 +26,7 @@ class LaserDetector(ABC):
             | cv2.FLOODFILL_MASK_ONLY
             | 255 << 8,  # Fill with 255
         )
-        mask = cv2.UMat(mask)  # Move to GPU
+        mask = cv2.UMat(mask[1:-1, 1:-1])  # Move to GPU
 
         contours, _ = cv2.findContours(mask, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
         if len(contours) == 0:
