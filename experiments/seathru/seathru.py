@@ -1,4 +1,5 @@
 # from https://raw.githubusercontent.com/hainh/sea-thru/refs/heads/master/seathru.py
+# pylint: skip-file
 
 import argparse
 import collections
