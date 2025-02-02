@@ -1,3 +1,5 @@
+"""A laser detector that uses labels from Label Studio."""
+
 import json
 from pathlib import Path
 from urllib.parse import urlparse
@@ -8,6 +10,8 @@ from pyaqua3ddev.laser.single_laser.laser_detector import LaserDetector
 
 
 class LabelStudioLaserDetector(LaserDetector):
+    """A laser detector that uses labels from Label Studio."""
+
     def __init__(self, image_path: Path, label_studio_json_path: Path):
         super().__init__()
 
@@ -44,7 +48,7 @@ class LabelStudioLaserDetector(LaserDetector):
                 y = result["value"]["y"] * original_height / 100.0
 
                 return self._correct_laser(img, np.array([x, y]))
-            else:
-                raise NotImplementedError
+
+            raise NotImplementedError
 
         raise KeyError("laser label cannot be found.")

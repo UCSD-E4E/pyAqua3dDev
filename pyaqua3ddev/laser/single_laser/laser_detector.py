@@ -1,3 +1,5 @@
+"""Abstract base class for detecting lasers."""
+
 from abc import ABC, abstractmethod
 
 import cv2
@@ -5,12 +7,11 @@ import numpy as np
 
 
 class LaserDetector(ABC):
-    def __init__(self) -> None:
-        super().__init__()
+    """Abstract base class for detecting lasers."""
 
     def _correct_laser(
         self, img: np.ndarray[np.uint8], laser_position: np.ndarray[float], tolerance=10
-    ) -> np.ndarray[np.uint8] | None:
+    ) -> np.ndarray[np.uint8]:
         height, width, _ = img.shape
 
         mask = np.zeros((height + 2, width + 2), dtype=np.uint8)
@@ -34,16 +35,24 @@ class LaserDetector(ABC):
 
         c = max(contours, key=cv2.contourArea)
 
-        M = cv2.moments(c)
+        moments = cv2.moments(c)
 
-        if M["m00"] == 0:
+        if moments["m00"] == 0:
             return None
 
-        cX = float(M["m10"] / M["m00"])
-        cY = float(M["m01"] / M["m00"])
+        center_x = float(moments["m10"] / moments["m00"])
+        center_y = float(moments["m01"] / moments["m00"])
 
-        return np.array([cX, cY])
+        return np.array([center_x, center_y])
 
     @abstractmethod
-    def find_laser(self, img: np.ndarray[np.uint8]) -> np.ndarray[np.uint8] | None:
+    def find_laser(self, img: np.ndarray[np.uint8]) -> np.ndarray[np.uint8]:
+        """Finds the single laser in the specified img.
+
+        Args:
+            img (np.ndarray[np.uint8]): The image to find the laser in.
+
+        Returns:
+            np.ndarray[np.uint8]: Returns the pixel location of the laser.
+        """
         raise NotImplementedError
