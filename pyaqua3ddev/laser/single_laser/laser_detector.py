@@ -31,14 +31,16 @@ class LaserDetector(ABC):
 
         contours, _ = cv2.findContours(mask, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
         if len(contours) == 0:
-            return None
+            print("Couldn't correct laser coordinates")
+            return laser_position
 
         c = max(contours, key=cv2.contourArea)
 
         moments = cv2.moments(c)
 
         if moments["m00"] == 0:
-            return None
+            print("Couldn't correct laser coordinates")
+            return laser_position
 
         center_x = float(moments["m10"] / moments["m00"])
         center_y = float(moments["m01"] / moments["m00"])
