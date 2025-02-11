@@ -47,7 +47,7 @@ class LabelStudioLaserDetector(LaserDetector):
                 x = result["value"]["x"] * original_width / 100.0
                 y = result["value"]["y"] * original_height / 100.0
 
-                return self._correct_laser(img, np.array([x, y]))
+                return np.array([x, y])  # self._correct_laser(img, np.array([x, y]))
 
             raise NotImplementedError
 
