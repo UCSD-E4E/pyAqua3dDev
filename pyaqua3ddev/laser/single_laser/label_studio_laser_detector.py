@@ -51,4 +51,4 @@ class LabelStudioLaserDetector(LaserDetector):
 
             raise NotImplementedError
 
-        raise KeyError("laser label cannot be found.")
+        return None
