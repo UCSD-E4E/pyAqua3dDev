@@ -51,4 +51,5 @@ class LabelStudioLaserDetector(LaserDetector):
 
             raise NotImplementedError
 
+        print(f"Couldn't find image {self.__label_studio_json_path}")
         return None
