@@ -9,6 +9,7 @@ import rawpy
 # These modules do exist. Pylint can't find them for some reason.
 # pylint: disable=no-name-in-module
 from skimage.exposure import adjust_gamma, equalize_adapthist
+from skimage.util import img_as_float, img_as_ubyte
 
 from pyaqua3ddev.image.image_processors.image_processor import ImageProcessor
 
@@ -16,20 +17,20 @@ from pyaqua3ddev.image.image_processors.image_processor import ImageProcessor
 class RawProcessor(ImageProcessor):
     """An image processor that takes in a RAW file and produces an image."""
 
-    def __init__(self, gamma=0.3) -> None:
+    def __init__(self) -> None:
         super().__init__()
-
-        self.__gamma = gamma
-
-    def __double_2_uint16(self, img: np.ndarray) -> np.ndarray:
-        return (img * 65535).astype(np.uint16)
 
     def process(self, file: Path) -> np.ndarray:
         with rawpy.imread(file.as_posix()) as raw:
-            img = raw.postprocess(
-                gamma=(1, 1), no_auto_bright=True, use_camera_wb=True, output_bps=16
+            img = img_as_float(
+                raw.postprocess(
+                    gamma=(1, 1), no_auto_bright=True, use_camera_wb=True, output_bps=16
+                )
             )
-            img = adjust_gamma(img, gamma=self.__gamma)
+
+            gamma = np.log(img.mean() * 255) / np.log(128)
+            img = adjust_gamma(img, gamma=gamma)
+
             img = equalize_adapthist(img)
 
-            return cv2.cvtColor(self.__double_2_uint16(img), cv2.COLOR_RGB2BGR)
+            return cv2.cvtColor(img_as_ubyte(img), cv2.COLOR_RGB2BGR)
