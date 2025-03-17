@@ -61,5 +61,5 @@ class LabelStudioLaserDetector(LaserDetector):
 
             return np.array([x, y])  # self._correct_laser(img, np.array([x, y]))
 
-        print(f"Couldn't find image {self.__label_studio_json_path}")
+        print(f"Couldn't find image {self.__image_path}")
         return None
