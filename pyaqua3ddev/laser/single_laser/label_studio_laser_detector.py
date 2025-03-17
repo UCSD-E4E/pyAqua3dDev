@@ -1,5 +1,6 @@
 """A laser detector that uses labels from Label Studio."""
 
+import hashlib
 import json
 from pathlib import Path
 from urllib.parse import urlparse
@@ -17,8 +18,11 @@ class LabelStudioLaserDetector(LaserDetector):
 
         self.__image_path = image_path
         self.__label_studio_json_path = label_studio_json_path
+        self.__hash = hashlib.md5(image_path.read_bytes()).hexdigest()
 
     def find_laser(self, img: np.ndarray[np.uint8]) -> np.ndarray[np.uint8]:
+        # TODO need to use the db for mapping
+
         if not self.__label_studio_json_path.exists():
             raise IOError
 
@@ -31,7 +35,10 @@ class LabelStudioLaserDetector(LaserDetector):
             if path_string.startswith("https://e4e-nas.ucsd.edu:6021"):
                 url = urlparse(path_string)
 
-                if Path(url.path).stem != self.__image_path.stem:
+                if (
+                    Path(url.path).stem != self.__image_path.stem
+                    and Path(url.path).stem != self.__hash
+                ):
                     continue
 
                 if len(item["annotations"]) == 0:
@@ -39,17 +46,20 @@ class LabelStudioLaserDetector(LaserDetector):
 
                 if len(item["annotations"][0]["result"]) == 0:
                     return None
+            else:
+                raise NotImplementedError
 
-                result = item["annotations"][0]["result"][0]
-                original_width = float(result["original_width"])
-                original_height = float(result["original_height"])
+            result = item["annotations"][0]["result"][0]
+            original_width = float(result["original_width"])
+            original_height = float(result["original_height"])
 
-                x = result["value"]["x"] * original_width / 100.0
-                y = result["value"]["y"] * original_height / 100.0
+            x = result["value"]["x"] * original_width / 100.0
+            y = result["value"]["y"] * original_height / 100.0
 
-                return np.array([x, y])  # self._correct_laser(img, np.array([x, y]))
+            if original_width == 3987:
+                y -= 10
 
-            raise NotImplementedError
+            return np.array([x, y])  # self._correct_laser(img, np.array([x, y]))
 
         print(f"Couldn't find image {self.__label_studio_json_path}")
         return None
