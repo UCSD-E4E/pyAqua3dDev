@@ -1,3 +1,7 @@
 [submodule "data"]
 	path = data
 	url = https://github.com/UCSD-E4E/a3d-data.git
+[submodule "depthwise_color_consistency"]
+	path = depthwise_color_consistency
+	url = git@github.com:UCSD-E4E/depthwise_color_consistency.git
+	branch = feature/cmake
