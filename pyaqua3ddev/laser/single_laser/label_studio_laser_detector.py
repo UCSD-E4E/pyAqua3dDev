@@ -21,8 +21,6 @@ class LabelStudioLaserDetector(LaserDetector):
         self.__hash = hashlib.md5(image_path.read_bytes()).hexdigest()
 
     def find_laser(self, img: np.ndarray[np.uint8]) -> np.ndarray[np.uint8]:
-        # TODO need to use the db for mapping
-
         if not self.__label_studio_json_path.exists():
             raise IOError
 
