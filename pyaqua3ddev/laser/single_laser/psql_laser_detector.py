@@ -36,12 +36,15 @@ class PSqlLabelDetector(LaserDetector):
             port=self.__port,
         ) as conn:
             cursor = conn.cursor()
-            rows = cursor.execute(
-                """
-SELECT x, y FROM images
+            rows = len(
+                cursor.execute(
+                    """
+SELECT x,y FROM canonical_dives
+JOIN images on images.dive = canonical_dives.path
 JOIN laser_labels ON laser_labels.cksum = images.image_md5
 WHERE laser_labels.cksum = %s""",
-                (self.__hash,),
+                    (self.__hash,),
+                )
             )
 
             if len(rows) == 0:
