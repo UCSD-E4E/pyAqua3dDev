@@ -36,7 +36,7 @@ class PSqlLabelDetector(LaserDetector):
             port=self.__port,
         ) as conn:
             cursor = conn.cursor()
-            rows = len(
+            rows = list(
                 cursor.execute(
                     """
 SELECT laser_labels.x, laser_labels.y FROM laser_labels
