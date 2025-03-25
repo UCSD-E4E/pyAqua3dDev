@@ -39,9 +39,9 @@ class PSqlLabelDetector(LaserDetector):
             rows = len(
                 cursor.execute(
                     """
-SELECT x,y FROM canonical_dives
-JOIN images on images.dive = canonical_dives.path
-JOIN laser_labels ON laser_labels.cksum = images.image_md5
+SELECT laser_labels.x, laser_labels.y FROM laser_labels
+INNER JOIN images ON laser_labels.cksum = images.image_md5
+INNER JOIN canonical_dives on images.dive = canonical_dives.path
 WHERE laser_labels.cksum = %s""",
                     (self.__hash,),
                 )
