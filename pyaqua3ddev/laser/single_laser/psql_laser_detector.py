@@ -35,19 +35,21 @@ class PSqlLabelDetector(LaserDetector):
             dbname=self.__dbname,
             port=self.__port,
         ) as conn:
-            cursor = conn.cursor()
-            rows = list(
-                cursor.execute(
-                    """
-SELECT laser_labels.x, laser_labels.y FROM laser_labels
-INNER JOIN images ON laser_labels.cksum = images.image_md5
-INNER JOIN canonical_dives on images.dive = canonical_dives.path
-WHERE laser_labels.cksum = %s""",
-                    (self.__hash,),
-                )
-            )
+            with conn.cursor() as cur:
+                rows = [
+                    (x, y)
+                    for x, y in cur.execute(
+                        """
+                    SELECT laser_labels.x, laser_labels.y FROM laser_labels
+                    INNER JOIN images ON laser_labels.cksum = images.image_md5
+                    INNER JOIN canonical_dives on images.dive = canonical_dives.path
+                    WHERE laser_labels.cksum = %s""",
+                        (self.__hash,),
+                    ).fetchall()
+                    if x is not None and y is not None
+                ]
 
-            if len(rows) == 0:
-                return None
+                if len(rows) == 0:
+                    return None
 
-            return np.array(rows[0])  # self._correct_laser(img, np.array(rows[0]))
+                return np.array(rows[0])  # self._correct_laser(img, np.array(rows[0]))
