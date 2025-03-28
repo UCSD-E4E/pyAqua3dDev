@@ -1,5 +1,6 @@
 """An image processor that takes in a RAW file and produces an image."""
 
+import math
 from pathlib import Path
 
 import cv2
@@ -28,7 +29,16 @@ class RawProcessor(ImageProcessor):
                 )
             )
 
-            gamma = np.log(img.mean() * 255) / np.log(128)
+            hsv = cv2.cvtColor(img_as_ubyte(img), cv2.COLOR_BGR2HSV)
+            _, _, val = cv2.split(hsv)
+
+            mid = 20
+            mean = np.mean(val)
+            meanLog = math.log(mean)
+            midLog = math.log(mid * 255)
+            gamma = midLog / meanLog
+            gamma = 1 / gamma
+
             img = adjust_gamma(img, gamma=gamma)
 
             img = equalize_adapthist(img)
