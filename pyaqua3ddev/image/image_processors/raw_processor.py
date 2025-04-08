@@ -29,7 +29,7 @@ class RawProcessor(ImageProcessor):
                     no_auto_bright=True,
                     use_camera_wb=True,
                     output_bps=16,
-                    userflip=0,
+                    user_flip=0,
                 )
             )
 
@@ -47,4 +47,4 @@ class RawProcessor(ImageProcessor):
 
             img = equalize_adapthist(img)
 
-            return cv2.cvtColor(img_as_ubyte(img), cv2.COLOR_RGB2BGR)
+            return img[:, :, ::-1]
