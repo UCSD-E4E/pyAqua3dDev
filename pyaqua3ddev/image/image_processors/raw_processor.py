@@ -25,7 +25,11 @@ class RawProcessor(ImageProcessor):
         with rawpy.imread(file.as_posix()) as raw:
             img = img_as_float(
                 raw.postprocess(
-                    gamma=(1, 1), no_auto_bright=True, use_camera_wb=True, output_bps=16
+                    gamma=(1, 1),
+                    no_auto_bright=True,
+                    use_camera_wb=True,
+                    output_bps=16,
+                    userflip=0,
                 )
             )
 
