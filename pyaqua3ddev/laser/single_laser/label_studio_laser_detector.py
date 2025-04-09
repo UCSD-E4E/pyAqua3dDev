@@ -38,14 +38,19 @@ class LabelStudioLaserDetector(LaserDetector):
                     and Path(url.path).stem != self.__hash
                 ):
                     continue
+            elif path_string.startswith("/"):
+                path = Path(path_string)
 
-                if len(item["annotations"]) == 0:
+                if path.stem != self.__hash:
                     continue
-
-                if len(item["annotations"][0]["result"]) == 0:
-                    return None
             else:
                 raise NotImplementedError
+
+            if len(item["annotations"]) == 0:
+                continue
+
+            if len(item["annotations"][0]["result"]) == 0:
+                return None
 
             result = item["annotations"][0]["result"][0]
             original_width = float(result["original_width"])
